@@ -12,6 +12,8 @@ namespace ChangeBackIcon.iOS
         {
             base.ViewWillAppear (animated);
 
+            // If you want to hide the back button in some pages, 
+            // you can pass a value to renderer and do this.
             var page = this.Element as ICanHideBackButton;
             if (page != null) {
                 if (page.HideBackButton) {
@@ -19,11 +21,14 @@ namespace ChangeBackIcon.iOS
                     return;
                 }
             }
+
+            // Change back icon.
             this.NavigationController.TopViewController.NavigationItem.LeftBarButtonItem = 
                 new UIBarButtonItem (
                     UIImage.FromFile ("Back.png"),
                     UIBarButtonItemStyle.Plain,
                     (sender, args) => {
+                        // This will overwrite PopView behavior in Xamarin Forms.
                         NavigationController.PopViewController (true);
                     });
         }

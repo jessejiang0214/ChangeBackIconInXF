@@ -15,18 +15,26 @@ namespace ChangeBackIcon.Droid
 
             var actionBar = ((Android.App.Activity)Context).ActionBar;
 
+            // As the Title is not alignment as center, so that we need to load customer view.
             actionBar.SetCustomView (Resource.Layout.CustomNavigationBarLayout);
             actionBar.SetDisplayShowCustomEnabled (true);
 
+            // If you want to hide the back button in some pages, 
+            // you can pass a value to renderer and do this.
             var pagemodel = this.Element as ICanHideBackButton;
             if (pagemodel != null) {
-                if (pagemodel.HideBackButton)
-                    actionBar.SetHomeAsUpIndicator (new ColorDrawable (Color.Transparent.ToAndroid ()));               
+                if (pagemodel.HideBackButton) {
+                    // I didn't find out another way to hide the UpInicator
+                    // I have tried this, but not work
+                    // actionBar.SetDisplayHomeAsUpEnabled(false);
+                    actionBar.SetHomeAsUpIndicator (new ColorDrawable (Color.Transparent.ToAndroid ())); 
+                }
             } else {
                 actionBar.SetHomeAsUpIndicator (Resource.Drawable.Back);
             }
-            actionBar.SetIcon (new ColorDrawable (Color.Transparent.ToAndroid ()));
 
+            // This function is used for hide the App Icon
+            actionBar.SetIcon (new ColorDrawable (Color.Transparent.ToAndroid ()));
 
             UpdatePageTitle ();
         }
@@ -44,6 +52,7 @@ namespace ChangeBackIcon.Droid
         protected override void OnElementPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged (sender, e);
+            // As we used customer view, so Title cannot be update after page loaded.
             if (e.PropertyName == "Title")
                 UpdatePageTitle ();
 
